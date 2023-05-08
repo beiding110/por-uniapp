@@ -134,6 +134,13 @@
 				this.setMpData()
 				// #endif
 				
+				if (!Object.keys(this.rules).length) {
+					// 没有设置rules时,直接提交
+					this.send();
+					
+					return;
+				}
+				
 				this.$refs.form.validate().then(res => {
 					this.send();
 				}).catch(errors => {

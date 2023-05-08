@@ -38,6 +38,10 @@
 		</view>
 		
 		<my-msg></my-msg>
+		
+		<!-- #ifdef H5 -->
+		<my-cnzz></my-cnzz>
+		<!-- #endif -->
 	</view>
 </template>
 
@@ -61,10 +65,30 @@
 						},
 					},
 					{
-						text: '文档',
+						text: '投标方案',
 						name: 'document',
 						img: '/static/images/tab/fangan-normal.png',
 						img2: '/static/images/tab/fangan-pressed.png',
+						topNavBg: false,
+						click() {
+							return true;
+						},
+					},
+					{
+						text: '讯息',
+						name: 'info',
+						img: '/static/images/tab/xunxi-normal.png',
+						img2: '/static/images/tab/xunxi-pressed.png',
+						topNavBg: false,
+						click() {
+							return true;
+						},
+					},
+					{
+						text: '商机人脉',
+						name: 'business-contact',
+						img: '/static/images/tab/shangji-normal.png',
+						img2: '/static/images/tab/shangji-pressed.png',
 						topNavBg: false,
 						click() {
 							return true;

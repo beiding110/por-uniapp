@@ -332,4 +332,37 @@ import {showMsgBox, showMsg, showConfirm,} from './message.js';
 		}
 		return !!flag ? res.slice(1, -1) : res.slice(0, -1);
 	}
+	
+	/**
+	 * 获取扫码进入的页面的地址参数；
+	 * @param {String} key 地址栏中的key
+	 */
+	owner.getQueryFromQrcode = function(key) {
+		// #ifdef H5		
+		return owner.getQuery.call(this, key);
+		// #endif
+		
+		// #ifdef MP-WEIXIN
+		var q = owner.getQuery.call(this, 'q');
+		
+		if (!q) {
+			return false;
+		}
+		
+		q = decodeURIComponent(q);
+		
+		if (!key) {
+			return q;
+		}
+		
+		var reg = new RegExp(`(\\?|^|&)${key}=([^&]*)(&|$)`),
+			matched = q.match(reg);
+			
+		if (!matched) {
+			return false;
+		}
+		
+		return matched[2];
+		// #endif
+	}
 })(Vue.prototype)

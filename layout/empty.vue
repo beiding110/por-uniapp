@@ -3,6 +3,10 @@
 		<slot></slot>
 		
 		<my-msg></my-msg>
+		
+		<!-- #ifdef H5 -->
+		<my-cnzz></my-cnzz>
+		<!-- #endif -->
 	</view>
 </template>
 

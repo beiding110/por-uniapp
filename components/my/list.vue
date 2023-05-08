@@ -140,7 +140,7 @@
 		},
 		methods: {
 			// 请求下一页
-			load(isReload) {
+			load(isReload = false, argSearch = {}) {
 				if (!this.action) {
 					return;
 				}
@@ -174,6 +174,7 @@
 				var search = {
 					...this.defaultSearch,
 					...this.data,
+					...argSearch,
 					pageindex: this.pageindex,
 				};
 				

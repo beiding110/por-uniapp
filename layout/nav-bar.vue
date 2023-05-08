@@ -10,6 +10,7 @@
 				:bgColor="navBgColor"
 				:fixed="false"
 			>
+				<slot name="left" slot="left"></slot>
 				<slot name="right" slot="right"></slot>
 			</u-navbar>
 		</view>
@@ -28,6 +29,10 @@
 		</view>
 		
 		<my-msg></my-msg>
+		
+		<!-- #ifdef H5 -->
+		<my-cnzz></my-cnzz>
+		<!-- #endif -->
 	</view>
 </template>
 
