@@ -22,7 +22,7 @@ export default {
     computed: {
         conStype() {
             return {
-                display: this.hide ? 'none' : 'inline';
+                display: this.hide ? 'none' : 'inline',
             };
         },
     },
