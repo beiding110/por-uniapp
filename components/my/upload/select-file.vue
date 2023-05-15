@@ -24,69 +24,132 @@
 				actionSheetList: [
 					{
 						name: '拍照',
-						handler: () => {
-							uni.chooseImage({
-								count: 1,
-								sizeType: ['original'],
-								sourceType: ['camera'],
-								success: (tempFilePaths) => {
-									this.onFileSelect(tempFilePaths);
-								},
-								fail: (err) => {
-									this.showMsgBox(err.errMsg);
-								},
-							});
-						},
+						type: 'camera',
 					},
 					{
 						name: '相册',
-						handler: () => {
-							uni.chooseImage({
-								count: 1,
-								sizeType: ['original'],
-								sourceType: ['album'],
-								success: (tempFilePaths) => {
-									this.onFileSelect(tempFilePaths);
-								},
-								fail: (err) => {
-									this.showMsgBox(err.errMsg);
-								},
-							});
-						},
+						type: 'album',
 					},
 					// #ifdef H5
 					{
 						name: '文件管理器',
-						handler: () => {
-							uni.chooseFile({
-								count: 1,
-								success: (tempFilePaths) => {
-									this.onFileSelect(tempFilePaths);
-								},
-								fail: (err) => {
-									this.showMsgBox(err.errMsg);
-								},
-							})
-						},
+						type: 'fileExploer'
 					},
 					// #endif
 					// #ifdef MP-WEIXIN
 					{
 						name: '微信聊天记录',
-						handler: () => {
-							wx.chooseMessageFile({
-								count: 1,
-								success: (tempFilePaths) => {
-									this.onFileSelect(tempFilePaths);
-								},
-								fail: (err) => {
-									this.showMsgBox(err.errMsg);
-								},
-							});
-						},
+						type: 'chat'
 					},
 					// #endif
 				],
+				
+				actionHandlerList: {
+					// 照相
+					camera: () => {
+						// #ifdef H5
+						uni.chooseImage({
+							count: 1,
+							sizeType: ['original'],
+							sourceType: ['camera'],
+							success: (tempFilePaths) => {
+								this.onFileSelect(tempFilePaths);
+							},
+							fail: (err) => {
+								if (/cancel/.test(err.errMsg)) {
+									return;
+								}
+								
+								this.showMsgBox(err.errMsg);
+							},
+						});
+						// #endif
+						
+						// #ifdef MP-WEIXIN
+						uni.chooseMedia({
+							count: 1,
+							sizeType: ['original'],
+							sourceType: ['camera'],
+							success: (tempFilePaths) => {
+								this.onFileSelect(tempFilePaths);
+							},
+							fail: (err) => {
+								if (/cancel/.test(err.errMsg)) {
+									return;
+								}
+								
+								this.showMsgBox(err.errMsg);
+							},
+						});
+						// #endif
+					},
+					// 相册
+					album: () => {
+						// #ifdef H5
+						uni.chooseImage({
+							count: 1,
+							sizeType: ['original'],
+							sourceType: ['album'],
+							success: (tempFilePaths) => {
+								this.onFileSelect(tempFilePaths);
+							},
+							fail: (err) => {
+								if (/cancel/.test(err.errMsg)) {
+									return;
+								}
+								
+								this.showMsgBox(err.errMsg);
+							},
+						});
+						// #endif
+						
+						// #ifdef MP-WEIXIN
+						uni.chooseMedia({
+							count: 1,
+							sizeType: ['original'],
+							sourceType: ['album'],
+							success: (tempFilePaths) => {
+								this.onFileSelect(tempFilePaths);
+							},
+							fail: (err) => {
+								if (/cancel/.test(err.errMsg)) {
+									return;
+								}
+								
+								this.showMsgBox(err.errMsg);
+							},
+						});
+						// #endif
+					},
+					// 文件浏览器
+					fileExploer: () => {
+						uni.chooseFile({
+							count: 1,
+							success: (tempFilePaths) => {
+								this.onFileSelect(tempFilePaths);
+							},
+							fail: (err) => {
+								if (/cancel/.test(err.errMsg)) {
+									return;
+								}
+								
+								this.showMsgBox(err.errMsg);
+							},
+						})
+					},
+					// 聊天记录
+					chat: () => {
+						wx.chooseMessageFile({
+							count: 1,
+							success: (tempFilePaths) => {
+								this.onFileSelect(tempFilePaths);
+							},
+							fail: (err) => {
+								this.showMsgBox(err.errMsg);
+							},
+						});
+					},
+				},
 			}
 		},
 		methods: {
@@ -100,8 +163,9 @@
 			},
 			
 			// 选中文件获取方式
-			selectHandler(item) {
-				var {handler} = item;
+			selectHandler(item) {				
+				var {type} = item,
+					handler = this.actionHandlerList[type];
 				
 				handler && handler();
 				

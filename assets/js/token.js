@@ -47,8 +47,8 @@ export function setToken(token) {
 	}
 	
 	var valStr = value[1], // cookie 键值对
-		name = REG_COOKIE_NAME.exec(valStr)[1], // cookie 键名
-		expires = REG_COOKIE_EXPIRES.exec(token)[1], // cookie expires
+		name = REG_COOKIE_NAME.exec(valStr)?.[1], // cookie 键名
+		expires = REG_COOKIE_EXPIRES.exec(token)?.[1], // cookie expires
 		currentToken = _getToken(),
 		existedIndex = currentToken.findIndex(item => item.name === name),
 		item = {

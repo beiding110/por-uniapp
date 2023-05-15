@@ -166,7 +166,8 @@
 				
 				uni.uploadFile({
 					url: this.actions.upload,
-					filePath: file.path,
+					filePath: file.path || file.tempFilePath,
+					name: this.fileguid,
 					header: {},
 					formData: {
 						fileguid: this.fileguid,
@@ -190,7 +191,7 @@
 					fail: res => {
 						var {msg} = res;
 						
-						this.showMsgBox(msg);
+						this.showMsgBox(msg || JSON.stringify(res));
 					},
 					complete: () => {
 						this.loadingController = false;
