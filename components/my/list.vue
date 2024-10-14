@@ -157,6 +157,10 @@
 						},
 					});
 				}
+
+				if (isReload) {
+					this.canLoadMore = true;
+				}
 				
 				if (!this.canLoadMore) {
 					// 无更多数据
@@ -189,11 +193,11 @@
 						this.afterQuery(rows, res);
 					}
 					
-					if(isReload){
+					if (isReload) {
 						this.model = rows;
 						
 						this.$emit('input', rows);
-					}else{
+					} else {
 						var model = [
 							...this.model,
 							...rows,
