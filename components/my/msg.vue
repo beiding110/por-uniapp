@@ -82,7 +82,11 @@
 		},
 		watch: {
 			showMsgController: {
-				handler (val) {					
+				handler (val) {
+					if (!val) {
+						return;
+					}
+					
 					var settings = {
 						type: this.type,
 						title: this.title,
