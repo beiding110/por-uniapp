@@ -82,14 +82,7 @@
 		},
 		watch: {
 			showMsgController: {
-				handler (val) {
-					if (!val) {
-						// 清空prompt输入内容
-						this.promptInput = '';
-
-						return;
-					}
-					
+				handler (val) {					
 					var settings = {
 						type: this.type,
 						title: this.title,
@@ -131,6 +124,9 @@
 					cancel,
 					value: promptInput,
 				});
+
+				// 清空prompt输入内容
+				this.promptInput = '';
 			},
 		},
 		mounted() {
