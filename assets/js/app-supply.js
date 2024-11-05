@@ -22,54 +22,62 @@ import CONFIG from '../../config/index.js';
 	 * @param {Function} cancel 点击取消后的回调
 	 */
 	owner.showConfirm = showConfirm;
+
+	/**
+	 * @param {String} title 提示标题
+	 * @param {Object} setting 设置可设置 placeholder、inputValidator
+	 * @param {Function} confirm 点击确认后的回调
+	 * @param {Function} cancel 点击取消后的回调
+	 */
+	owner.showPrompt = showPrompt;
 	
 	/**
-	     * 获取路由中参数
-	     * @param  {String} key 参数关键字
-	     * @return {String}     获取到的参数
-	     */
-	    owner.getQuery = function (key) {
-			if (this.$route) {
-				if (key) {
-				    return this.$route.query[key];
-				} else {
-				    return this.$route.query;
-				};
-			}
-			
-			// 非h5端，使用$root中存储的变量
-			
-			// if (key) {
-			// 	return this.$root.rQuery[key];
-			// } else {
-			// 	return this.$root.rQuery;
-			// }
-			
-			var fullPath = this.$root.$scope.$page.fullPath;
-			
-			var strQuery = fullPath.split('?')[1];
-			
-			if (!strQuery) {
-				return key ? '' : {};
-			}
-			
-			var kvs = strQuery.split('&'),
-				queryMap = kvs.reduce((obj, item) => {
-					let kv = item.split('='),
-						key = kv[0],
-						value = kv[1];
-						
-					obj[key] = decodeURIComponent(value);
-					
-					return obj
-				}, {});
-				
+	 * 获取路由中参数
+	 * @param  {String} key 参数关键字
+	 * @return {String}     获取到的参数
+	 */
+	owner.getQuery = function (key) {
+		if (this.$route) {
 			if (key) {
-				return queryMap[key];
+				return this.$route.query[key];
 			} else {
-				return queryMap;
-			}
-	    };
+				return this.$route.query;
+			};
+		}
+		
+		// 非h5端，使用$root中存储的变量
+		
+		// if (key) {
+		// 	return this.$root.rQuery[key];
+		// } else {
+		// 	return this.$root.rQuery;
+		// }
+		
+		var fullPath = this.$root.$scope.$page.fullPath;
+		
+		var strQuery = fullPath.split('?')[1];
+		
+		if (!strQuery) {
+			return key ? '' : {};
+		}
+		
+		var kvs = strQuery.split('&'),
+			queryMap = kvs.reduce((obj, item) => {
+				let kv = item.split('='),
+					key = kv[0],
+					value = kv[1];
+					
+				obj[key] = decodeURIComponent(value);
+				
+				return obj
+			}, {});
+			
+		if (key) {
+			return queryMap[key];
+		} else {
+			return queryMap;
+		}
+	};
 	
     /**
      * 获取$store.getters中的变量

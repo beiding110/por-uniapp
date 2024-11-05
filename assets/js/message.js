@@ -5,11 +5,11 @@ import store from '@/store/index.js';
  * @param {Funciton} confirm 点击确认后的回调
  */
 export function showMsgBox(content, confirm) {
-	store.dispatch('openMsg', {
-		controller: 'showMsgBoxController',
-		content,
-		confirm,
-	});
+    store.dispatch('openMsg', {
+        controller: 'showMsgBoxController',
+        content,
+        confirm,
+    });
 }
 
 /**
@@ -17,11 +17,11 @@ export function showMsgBox(content, confirm) {
  * @param {String} type 提示倾向
  */
 export function showMsg(content, type) {
-	store.dispatch('openMsg', {
-		controller: 'showMsgController',
-		content,
-		type,
-	});
+    store.dispatch('openMsg', {
+        controller: 'showMsgController',
+        content,
+        type,
+    });
 }
 
 /**
@@ -30,10 +30,26 @@ export function showMsg(content, type) {
  * @param {Function} cancel 点击取消后的回调
  */
 export function showConfirm(content, confirm, cancel) {
-	store.dispatch('openMsg', {
-		controller: 'showConfirmController',
-		content,
-		confirm,
-		cancel,
-	});
+    store.dispatch('openMsg', {
+        controller: 'showConfirmController',
+        content,
+        confirm,
+        cancel,
+    });
+}
+
+/**
+ * @param {String} title 提示标题
+ * @param {Object} setting 设置可设置 placeholder、inputValidator
+ * @param {Function} confirm 点击确认后的回调
+ * @param {Function} cancel 点击取消后的回调
+ */
+export function showPrompt(title, setting, confirm, cancel) {
+    store.dispatch('openMsg', {
+        controller: 'showPromptController',
+        title,
+        confirm,
+        cancel,
+        setting,
+    });
 }

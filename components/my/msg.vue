@@ -31,6 +31,28 @@
 			@confirm="confirm('showConfirmController')" 
 			@cancel="confirm('showConfirmController', true)"
 		></u-modal>
+
+		<u-modal
+			:show="showPromptController" 
+			:title="title"
+			showCancelButton
+			@confirm="confirm('showPromptController', false, promptInput)" 
+			@cancel="confirm('showPromptController', true)"
+		>
+			<view class="prompt-body">
+				<view class="row">
+					<u--input
+						:placeholder="promptSetting.placeholder"
+						border="surround"
+						v-model="promptInput"
+					></u--input>
+				</view>
+
+				<view v-if="inputErrorMessage" class="row error-msg">
+					{{ inputErrorMessage }}
+				</view>
+			</view>
+		</u-modal>
 	</view>
 </template>
 
@@ -40,7 +62,7 @@
 	export default {
 		data() {
 			return {
-				
+				promptInput: '',
 			};
 		},
 		computed: {
@@ -48,21 +70,29 @@
 				showMsgBoxController: state => state.message.showMsgBoxController,
 				showMsgController: state => state.message.showMsgController,
 				showConfirmController: state => state.message.showConfirmController,
+				showPromptController: state => state.message.showPromptController,
 				
 				content: state => state.message.content,
 				title: state => state.message.title,
 				type: state => state.message.type,
+
+				inputErrorMessage: state => state.message.validateErrMsg,
+				promptSetting: state => state.message.setting,
 			}),
 		},
 		watch: {
 			showMsgController: {
 				handler (val) {
 					if (!val) {
+						// 清空prompt输入内容
+						this.promptInput = '';
+
 						return;
 					}
 					
 					var settings = {
 						type: this.type,
+						title: this.title,
 						message: this.content,
 						top: .01,
 						complete: () => {
@@ -95,10 +125,11 @@
 			 * @param {Object} controllerName 将被赋值的controller名称
 			 * @param {Object} cancel 是否为取消按钮
 			 */
-			confirm(controllerName, cancel) {
+			confirm(controllerName, cancel, promptInput) {
 				this.$store.dispatch('closeMsg', {
 					controller: controllerName,
 					cancel,
+					value: promptInput,
 				});
 			},
 		},
@@ -113,5 +144,21 @@
 		position: absolute;
 		width: 0;
 		height: 0;
+	}
+
+	.prompt-body {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+
+		.row {
+			& + .row {
+				margin-top: 6px;
+			}
+
+			&.error-msg {
+				color: #fa3534;
+			}
+		}
 	}
 </style>

@@ -18,6 +18,7 @@ export default {
 		showMsgBoxController: false,
 		showMsgController: false,
 		showConfirmController: false,
+		showPromptController: false,
 		
 		lock: false, // 锁住,不弹第二次
 		
@@ -28,6 +29,8 @@ export default {
 		type: '',
 		confirm: null,
 		cancel: null,
+		setting: {},
+		validateErrMsg: '',
 	},
     getters: {
         
@@ -41,6 +44,9 @@ export default {
 		},
 		updateShowConfirm(state, val) {
 			state.showConfirmController = val;
+		},
+		updateShowPrompt(state, val) {
+			state.showPromptController = val;
 		},
 		
 		updateLock(state, val) {
@@ -58,7 +64,7 @@ export default {
 		},
 		
 		updateTitle(state, val) {
-			state.tiele = val;
+			state.title = val;
 		},
 		updateContent(state, val) {
 			state.content = val;
@@ -72,13 +78,19 @@ export default {
 		updateCancel(state, val) {
 			state.cancel = val;
 		},
+		updateSetting(state, val) {
+			state.setting = val;
+		},
+		updateValidateErrMsg(state, val) {
+			state.validateErrMsg = val;
+		},
     },
     actions: {
-		openMsg({state, commit, dispatch}, setting) {
-			if (setting) {
+		openMsg({state, commit, dispatch}, settings) {
+			if (settings) {
 				// 往列队中插入一个数据
 				
-				var {controller, content, confirm, cancel,} = setting;
+				var {controller, title, content, type, confirm, cancel, setting = {}} = settings;
 				
 				if (state.waiting.every(item => {
 					return !(
@@ -92,9 +104,12 @@ export default {
 						method: 'push',
 						data: {
 							controller,
+							title,
 							content,
+							type,
 							confirm,
 							cancel,
+							setting,
 						},
 					});
 				}
@@ -117,6 +132,7 @@ export default {
 			commit('updateType', firstInWaiting.type || '');
 			commit('updateConfirm', firstInWaiting.confirm);
 			commit('updateCancel', firstInWaiting.cancel);
+			commit('updateSetting', firstInWaiting.setting);
 			
 			// 弹出
 			commit(mutationName, true);
@@ -127,18 +143,46 @@ export default {
 			});
 		},
 		closeMsg({state, commit, dispatch}, obj) {
-			commit('updateLock', false);
-			
-			var {controller, cancel} = obj;
+			var { cancel, value } = obj,
+				handler = null;
 			
 			if (!cancel) {
-				state.confirm && state.confirm();
+				// prompt内容校验
+				var { inputValidator } = state.setting,
+					validateErrMsg; // 校验结果，为字符串的时候是校验错误
+
+				if (inputValidator) {
+					validateErrMsg = inputValidator(value);
+
+					if (typeof validateErrMsg === 'string') {
+						commit('updateValidateErrMsg', validateErrMsg);
+
+						console.log('valid deny');
+
+						return;
+					}
+				}
+				
+				handler = state.confirm;
 			} else {
-				state.cancel && state.cancel();
+				handler = state.cancel;
 			}
 			
-			var mutationName = getMutationsNameByState(controller);
+			handler && handler({value});
+
+			dispatch('doClose', obj);
+		},
+		doClose({state, commit, dispatch}, obj) {
+			commit('updateLock', false);
+			
+			var { controller } = obj,
+				mutationName = getMutationsNameByState(controller);
+
 			commit(mutationName, false);
+
+			// 清空状态
+			commit('updateValidateErrMsg', '');
+			commit('updateSetting', {});
 			
 			// 关闭时,如果列队中有待弹出的,则继续弹出
 			if (state.waiting.length > 0) {
@@ -146,6 +190,6 @@ export default {
 					dispatch('openMsg');
 				}, 300);
 			}
-		}
+		},
     },
 }
