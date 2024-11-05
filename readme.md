@@ -55,7 +55,7 @@ component组件：`...somepath/components/xxx.vue` 或 `...somepath/components/x
 ### 文件内容
 
 > 注意：每个页面都应引用layout中合适的layout。组件中无需引用
-> 
+
 ```template
 	<layout-empty></layout-empty>		<!--全空的layout-->
 	<layout-nav-bar></layout-nav-bar>	<!--带navbar上导航的layout-->
@@ -79,13 +79,13 @@ export default {
 	<!-- <layout-empty></layout-empty> -->
 
 	<layout-nav-bar>
-		
+
 	</layout-nav-bar>
 </template>
 
 <script>
 	import MIXIN_GLOBAL from '@/mixins/global.js';
-	
+
 	export default {
 		mixins: [MIXIN_GLOBAL],
 		data() {
@@ -94,10 +94,10 @@ export default {
 			};
 		},
 		methods: {
-			
+	
 		},
 		mounted() {
-			
+	
 		},
 		onLoad(query) {
 			// 存储页面参数
@@ -107,7 +107,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-	
+
 </style>
 ```
 
@@ -116,29 +116,29 @@ export default {
 ```.vue
 <template>
 	<view class="">
-		
+
 	</view>
 </template>
 
-<script>	
+<script>
 	export default {
 		props: {},
 		data() {
 			return {
-				
+		
 			}
 		},
 		methods: {
-			
+	
 		},
 		mounted() {
-			
+	
 		},
 	}
 </script>
 
 <style scoped lang="scss">
-	
+
 </style>
 
 ```
@@ -169,7 +169,7 @@ v-for 与 slot 同时使用，并使用了插槽作用域时，如果slot中组�
 
 这时需要将v-for拿到外层实现，若使用了 `<my-list></my-list>` 则应设置属性 `:autoList="false"`
 
->感觉和wxmp的小程序影子节点有关
+> 感觉和wxmp的小程序影子节点有关
 
 ```
 外层
@@ -241,3 +241,30 @@ v-for 与 slot 同时使用，并使用了插槽作用域时，如果slot中组�
 参考：[https://blog.csdn.net/weixin_38673922/article/details/128454847](https://blog.csdn.net/weixin_38673922/article/details/128454847)
 
 分包中的static文件引用路径，应为：/page-a/static/xxx
+
+### slot嵌套使用
+
+在小程序组件中进行组件二次封装，使用插槽覆盖原组件默认插槽时，需将各项属性（v-slot、v-if）拆分开写，同时补充默认无插槽插入的默认展示：
+
+```组件中
+	// 正常识别的写法
+	<template v-slot:left>
+		<template v-if="$slots.left">
+			<slot name="left"></slot>
+		</template>
+
+		<template v-else>
+			<u-icon name="arrow-left" size="20"></u-icon>
+		</template>
+	</template>
+
+	// 不被识别的写法
+	<slot v-if="$slots.left" name="left" slot="left"></slot>
+```
+
+```使用组件
+<组件>
+	<view slot="left">xxx</view>
+</组件>
+
+```
