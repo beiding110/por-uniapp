@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-import {showMsgBox, showMsg, showConfirm,} from './message.js';
+import {showMsgBox, showMsg, showConfirm,showPrompt} from './message.js';
 import CONFIG from '../../config/index.js';
 
 (function (owner) {
