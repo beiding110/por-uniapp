@@ -1,13 +1,10 @@
 <template>
 	<view class="data-time-picker">
-		<u--input
-			v-model="value"
-			disabled
+		<my-input-holder
+			:value="value"
 			:placeholder="placeholder"
-			:border="border"
-			disabledColor="white"
 			@click.native.stop="open"
-		></u--input>
+		></my-input-holder>
 						
 		<u-datetime-picker
 			ref="datetimePicker"

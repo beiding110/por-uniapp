@@ -4,5 +4,6 @@ export default {
 		Vue.component('my-list', function(){return import(/*webpackChunkName: 'coms'*/ './list');});
 		Vue.component('my-picker', function(){return import(/*webpackChunkName: 'coms'*/ './picker');});
 		Vue.component('my-popup', function(){return import(/*webpackChunkName: 'coms'*/ './popup');});
+        Vue.component('my-input-holder', function(){return import(/*webpackChunkName: 'coms'*/ './input-holder');});
     }
 }
